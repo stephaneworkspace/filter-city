@@ -28,9 +28,9 @@
  * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 extern crate serde;
-extern crate serde_json;
 extern crate serde_derive;
-use serde::{Deserialize};
+extern crate serde_json;
+use serde::Deserialize;
 use std::fs::File;
 use std::io::Read;
 
@@ -39,15 +39,37 @@ struct City {
     country: String,
     name: String,
     lat: String,
-    lng: String
+    lng: String,
 }
 
 fn main() {
+    /*
     let mut s = String::new();
     const PATH: &str = "/home/stephane/Code/Rust/filter-city-rust/assets/citys.json";
     File::open(PATH).unwrap().read_to_string(&mut s).unwrap();
     let _deserialized: Vec<City> = serde_json::from_str(&s).unwrap();
     for x in &_deserialized {
         println!("{}", x.name);
+    }*/
+    let s;
+    const GENEVE: &str = "Genève";
+    s = filter_city(GENEVE);
+    println!("{}", s);
+}
+
+#[allow(unused_variables)]
+fn filter_city(filter: &str) -> std::string::String {
+    let mut json = String::new();
+    let mut s = String::new();
+    const PATH: &str = "/home/stephane/Code/Rust/filter-city-rust/assets/citys.json";
+    File::open(PATH).unwrap().read_to_string(&mut s).unwrap();
+    let _deserialized: Vec<City> = serde_json::from_str(&s).unwrap();
+    for x in &_deserialized {
+        // it's wanted to compute the for loop in its way
+        // it's just for test with another rust program
+        json = format!("{}", x.name);
+        //json = [json, x.name.clone()].concat();
+        // println!("{}", x.name);
     }
+    json
 }
