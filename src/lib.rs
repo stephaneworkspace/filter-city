@@ -52,7 +52,7 @@ pub fn filter_city(filter: &str) -> Vec<City> {
     let mut file_path: std::path::PathBuf = std::path::PathBuf::new();
     file_path.push(std::env::current_dir().unwrap().as_path());
     file_path.push(PATH);
-    println!("{:?}", file_path.as_path());
+    // println!("{:?}", file_path.as_path());
     File::open(file_path.as_path())
         .unwrap()
         .read_to_string(&mut s)
