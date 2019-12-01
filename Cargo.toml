@@ -1,6 +1,6 @@
 [package]
 name = "filter-city"
-version = "0.1.4"
+version = "0.1.5"
 authors = ["Stéphane Bressani <s.bressani@bluewin.ch>"]
 keywords = ["city"]
 # crates.io/category_slugs
@@ -12,11 +12,6 @@ documentation = "https://github.com/stephaneworkspace/filter-city"
 homepage = "https://github.com/stephaneworkspace/filter-city"
 repository = "https://github.com/stephaneworkspace/filter-city"
 edition = "2018"
-include = [
-    "**/*.rs",
-    "Cargo.toml",
-    "assets/citys.json",
-]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]

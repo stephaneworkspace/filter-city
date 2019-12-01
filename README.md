@@ -19,6 +19,9 @@
 ## Introduction
 This program allows to search a city in ASCII all over the world in a json file.
 Initalliy I have done a script with Python but thas was very slow.
+## Prepare
+You have to download on my [github](https://github.com/stephaneworkspace/filter-city) the assets folder and put at the same level of ./src/main.rs and ./Cargo.toml the assets folder.
+* [x] ./assets/city.json
 ## Use
 ```
 extern crate filter_city;
@@ -27,6 +30,8 @@ let search Vec<filter_city::City> = filter_city::filter_city("Search...");
 ```
 ## Version
 
-0.1.3
+0.1.5
 * This program allows to search a city in ASCII all over the world in a json
   file.
+older
+* Yanked
