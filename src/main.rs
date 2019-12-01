@@ -1,10 +1,8 @@
 /******************************************************************************
- * Filter of city analyse without Orm/Sql/NoSql
+ * This program allows to search a city in ASCII all over the world in a json
+ * file.
  *
- * Initalliy i have done a script for filter a json file 20 mo in django
- * without using a database and the computing of information is very slowwwwww
- *
- * So... this is my hello world with rust !!!
+ * Initalliy I have done a script with Python but thas was very slow.
  *
  * By Stéphane Bressani
  *  ____  _             _
@@ -16,7 +14,7 @@
  *               |_|github.com/stephaneworkspace
  *
  * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2
+ * it under the terms of the GNU General Public License version 3
  * as published by the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
@@ -30,12 +28,16 @@
 extern crate serde;
 extern crate serde_derive;
 extern crate serde_json;
+extern crate unidecode;
+
 use serde::Deserialize;
+use serde::Serialize;
 use std::fs::File;
 use std::io::Read;
+use unidecode::unidecode;
 
-#[derive(Deserialize, Debug)]
-struct City {
+#[derive(Serialize, Deserialize, Debug)]
+pub struct City {
     country: String,
     name: String,
     lat: String,
@@ -43,33 +45,40 @@ struct City {
 }
 
 fn main() {
-    /*
-    let mut s = String::new();
-    const PATH: &str = "/home/stephane/Code/Rust/filter-city-rust/assets/citys.json";
-    File::open(PATH).unwrap().read_to_string(&mut s).unwrap();
-    let _deserialized: Vec<City> = serde_json::from_str(&s).unwrap();
-    for x in &_deserialized {
-        println!("{}", x.name);
-    }*/
-    let s;
-    const GENEVE: &str = "Genève";
-    s = filter_city(GENEVE);
-    println!("{}", s);
+    const FILTER_EXAMPLE: &str = "Genève";
+    let result = filter_city(FILTER_EXAMPLE);
+    let json = serde_json::to_string(&result).unwrap();
+    println!("{}", json);
 }
 
-#[allow(unused_variables)]
-fn filter_city(filter: &str) -> std::string::String {
-    let mut json = String::new();
+pub fn filter_city(filter: &str) -> Vec<City> {
+    let filter_upper_decode = unidecode(filter).to_ascii_uppercase();
+    let mut compare_string;
     let mut s = String::new();
-    const PATH: &str = "/home/stephane/Code/Rust/filter-city-rust/assets/citys.json";
-    File::open(PATH).unwrap().read_to_string(&mut s).unwrap();
+    const PATH: &str = "assets/citys.json";
+    let mut file_path: std::path::PathBuf = std::path::PathBuf::new();
+    file_path.push(std::env::current_dir().unwrap().as_path());
+    file_path.push(PATH);
+    println!("{:?}", file_path.as_path());
+    File::open(file_path.as_path())
+        .unwrap()
+        .read_to_string(&mut s)
+        .unwrap();
     let _deserialized: Vec<City> = serde_json::from_str(&s).unwrap();
+    let mut city: Vec<City> = Vec::new();
     for x in &_deserialized {
-        // it's wanted to compute the for loop in its way
-        // it's just for test with another rust program
-        json = format!("{}", x.name);
-        //json = [json, x.name.clone()].concat();
-        // println!("{}", x.name);
+        if filter.len() > 0 {
+            compare_string =
+                unidecode(x.name.clone().as_str()).to_ascii_uppercase();
+            if compare_string.contains(filter_upper_decode.as_str()) {
+                city.push(City {
+                    country: x.country.clone(),
+                    name: x.name.clone(),
+                    lat: x.lat.clone(),
+                    lng: x.lng.clone(),
+                });
+            }
+        }
     }
-    json
+    city
 }

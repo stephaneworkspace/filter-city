@@ -1,5 +1,33 @@
-# filter-city-rust
-Filter of city analyse without Orm/Sql/NoSql                                 
-<br />
-<br />Initalliy i have done a script for filter a json file 20 mo in django without using a database and the computing of information is very slowwwwww<br /><br />
-So... this is my hello world with rust !!!                                   
+# filter-city
+```
+   __ _ _ _                      _ _         
+  / _(_) | |_ ___ _ __       ___(_) |_ _   _ 
+ | |_| | | __/ _ \ '__|____ / __| | __| | | |
+ |  _| | | ||  __/ | |_____| (__| | |_| |_| |
+ |_| |_|_|\__\___|_|        \___|_|\__|\__, |
+                                      |___/ 
+ By Stéphane Bressani
+  ____  _             _
+ / ___|| |_ ___ _ __ | |__   __ _ _ __   ___
+ \___ \| __/ _ \ '_ \| '_ \ / _` | '_ \ / _ \
+  ___) | ||  __/ |_) | | | | (_| | | | |  __/
+ |____/ \__\___| .__/|_| |_|\__,_|_| |_|\___|
+               | |stephane-bressani.ch
+               |_|github.com/stephaneworkspace
+
+``` 
+## Introduction
+This program allows to search a city in ASCII all over the world in a json file.
+Initalliy I have done a script with Python but thas was very slow.
+## Use
+```
+extern crate filter-city;
+
+use filter-city::filter-city;
+
+let search: Vec<filter-city::City> = filter-city::filter-city("Search...");
+```
+## Version
+0.1.0
+* THis program allows to search a city in ASCII all over the world in a json
+  file.
