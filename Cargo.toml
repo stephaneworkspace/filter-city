@@ -7,6 +7,10 @@ keywords = ["city"]
 categories = ["value-formatting"]
 license = "GPL-3.0"
 readme = "README.md"
+description = "This program allows to search a city in ASCII all over the world in a json file."
+documentation = "https://github.com/stephaneworkspace/filter-city"
+homepage = "https://github.com/stephaneworkspace/filter-city"
+repository = "https://github.com/stephaneworkspace/filter-city"
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
