@@ -21,13 +21,15 @@ This program allows to search a city in ASCII all over the world in a json file.
 Initalliy I have done a script with Python but thas was very slow.
 ## Use
 ```
-extern crate filter_city;
+extern crate filter-city;
 
 use filter-city::filter_city;
 
 let search: Vec<filter_city::City> = filter_city::filter_city("Search...");
 ```
 ## Version
+0.1.1
+* Error in documentation fixed
 0.1.0
 * THis program allows to search a city in ASCII all over the world in a json
   file.
