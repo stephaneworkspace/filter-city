@@ -1,6 +1,6 @@
 [package]
-name = "filter-city"
-version = "0.1.1"
+name = "filter_city"
+version = "0.1.2"
 authors = ["Stéphane Bressani <s.bressani@bluewin.ch>"]
 keywords = ["city"]
 # crates.io/category_slugs
@@ -12,7 +12,7 @@ documentation = "https://github.com/stephaneworkspace/filter-city"
 homepage = "https://github.com/stephaneworkspace/filter-city"
 repository = "https://github.com/stephaneworkspace/filter-city"
 edition = "2018"
-
+publich = false
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
