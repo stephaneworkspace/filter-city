@@ -44,13 +44,6 @@ pub struct City {
     lng: String,
 }
 
-fn main() {
-    const FILTER_EXAMPLE: &str = "Genève";
-    let result = filter_city(FILTER_EXAMPLE);
-    let json = serde_json::to_string(&result).unwrap();
-    println!("{}", json);
-}
-
 pub fn filter_city(filter: &str) -> Vec<City> {
     let filter_upper_decode = unidecode(filter).to_ascii_uppercase();
     let mut compare_string;
