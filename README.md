@@ -26,10 +26,11 @@ You have to download on my [github](https://github.com/stephaneworkspace/filter-
 ```
 extern crate filter_city;
 
-let search Vec<filter_city::City> = filter_city::filter_city("Search...");
+let search: Vec<filter_city::City> = filter_city::filter_city("Search...");
 ```
 ## Version
-
+* 0.1.6
+    Optimization
 * 0.1.5
     This program allows to search a city in ASCII all over the world in a json file.
 * older

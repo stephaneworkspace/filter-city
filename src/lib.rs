@@ -13,17 +13,6 @@
  *               | |stephane-bressani.ch
  *               |_|github.com/stephaneworkspace
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 3
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 extern crate serde;
 extern crate serde_derive;
@@ -61,8 +50,7 @@ pub fn filter_city(filter: &str) -> Vec<City> {
     let mut city: Vec<City> = Vec::new();
     for x in &_deserialized {
         if filter.len() > 0 {
-            compare_string =
-                unidecode(x.name.clone().as_str()).to_ascii_uppercase();
+            compare_string = unidecode(x.name.as_str()).to_ascii_uppercase();
             if compare_string.contains(filter_upper_decode.as_str()) {
                 city.push(City {
                     country: x.country.clone(),

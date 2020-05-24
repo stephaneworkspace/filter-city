@@ -1,11 +1,11 @@
 [package]
 name = "filter-city"
-version = "0.1.5"
+version = "0.1.6"
 authors = ["Stéphane Bressani <s.bressani@bluewin.ch>"]
 keywords = ["city"]
 # crates.io/category_slugs
 categories = ["value-formatting"]
-license = "GPL-3.0"
+license-file = "LICENSE"
 readme = "README.md"
 description = "This program allows to search a city in ASCII all over the world in a json file."
 documentation = "https://github.com/stephaneworkspace/filter-city"
