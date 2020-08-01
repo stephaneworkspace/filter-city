@@ -25,6 +25,12 @@ use std::fs::File;
 use std::io::Read;
 use unidecode::unidecode;
 
+use std::io::{self, Write};
+use std::process;
+use std::str::FromStr;
+use std::sync::mpsc::{channel, Sender};
+use std::thread;
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct City {
     pub country: String,
@@ -40,6 +46,7 @@ pub struct Citys {
 
 pub trait Fd {
     fn filter(&self, name: String) -> Vec<City>;
+    fn filter_multithread(&self, name: String) -> Vec<City>;
 }
 
 impl Citys {
@@ -79,10 +86,53 @@ impl Fd for Citys {
         }
         city
     }
+
+    fn filter_multithread(&self, name: String) -> Vec<City> {
+        let mut citys: Vec<City> = vec![];
+        if name.len() > 1 {
+            let num_threads = 4;
+            let mut j: usize = 0;
+            let (tx, rx) = channel();
+            for i in 0..num_threads {
+                let tx = tx.clone();
+                let citys_static: Vec<City> = self.citys.clone();
+                let filter_upper_decode =
+                    unidecode(&name.as_str()).to_ascii_uppercase();
+                thread::spawn(move || loop {
+                    j = i * (citys_static.len() / num_threads);
+                    loop {
+                        let x = citys_static[j].clone();
+                        let compare_string =
+                            unidecode(x.name.as_str()).to_ascii_uppercase();
+                        if compare_string.contains(filter_upper_decode.as_str())
+                        {
+                            tx.send(City {
+                                country: x.country.clone(),
+                                name: x.name.clone(),
+                                lat: x.lat.clone(),
+                                lng: x.lng.clone(),
+                            })
+                            .unwrap();
+                        }
+                        j += 1;
+                        if j >= citys_static.len() {
+                            break;
+                        }
+                    }
+                });
+            }
+            drop(tx);
+            for p in rx {
+                citys.push(p.clone());
+            }
+        }
+        citys
+    }
 }
 
 pub fn filter_city(name: String) -> Vec<City> {
     const PATH: &str = "assets/citys.json";
     let fd = Citys::new(PATH);
-    fd.filter(name)
+    //fd.filter(name)
+    fd.filter_multithread(name)
 }

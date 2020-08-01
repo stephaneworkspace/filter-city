@@ -1,0 +1,65 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'filter-city'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=filter-city"
+                ],
+                "filter": {
+                    "name": "filter-city",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug example 'city_find'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--example=city_find",
+                    "--package=filter-city"
+                ],
+                "filter": {
+                    "name": "city_find",
+                    "kind": "example"
+                }
+            },
+            "args": ["chene-"],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in example 'city_find'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--example=city_find",
+                    "--package=filter-city"
+                ],
+                "filter": {
+                    "name": "city_find",
+                    "kind": "example"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
