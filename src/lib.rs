@@ -26,9 +26,7 @@ use std::io::Read;
 use unidecode::unidecode;
 
 use std::io::{self, Write};
-use std::process;
-use std::str::FromStr;
-use std::sync::mpsc::{channel, Sender};
+use std::sync::mpsc::channel;
 use std::thread;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -97,33 +95,30 @@ impl Fd for Citys {
                 let citys_static: Vec<City> = self.citys.clone();
                 let filter_upper_decode =
                     unidecode(&name.as_str()).to_ascii_uppercase();
-                let jj: usize = i * ((citys_static.len()) / num_threads);
-                let max_jj: usize =
-                    (i + 1) * (citys_static.len() / num_threads);
-                thread::spawn(move || loop {
+                let max_jj: usize = citys_static.len() / num_threads;
+                let jj: usize = i * &max_jj;
+                thread::spawn(move || {
                     let mut j: usize = jj;
-                    let x = citys_static[j].clone();
-                    let compare_string =
-                        unidecode(x.name.as_str()).to_ascii_uppercase();
-                    if compare_string.contains(filter_upper_decode.as_str()) {
-                        // print!(".");
-                        // io::stdout().flush().unwrap();
-                        /*println!(
-                            "name: {} {}",
-                            x.name.clone(),
-                            x.country.clone()
-                        );*/
-                        tx.send(City {
-                            country: x.country.clone(),
-                            name: x.name.clone(),
-                            lat: x.lat.clone(),
-                            lng: x.lng.clone(),
-                        })
-                        .unwrap();
-                    }
-                    j += 1;
-                    if j >= citys_static.len() || j >= max_jj {
-                        break;
+                    loop {
+                        let x = citys_static[j].clone();
+                        let compare_string =
+                            unidecode(x.name.as_str()).to_ascii_uppercase();
+                        if compare_string.contains(filter_upper_decode.as_str())
+                        {
+                            print!(".");
+                            io::stdout().flush().unwrap();
+                            tx.send(City {
+                                country: x.country.clone(),
+                                name: x.name.clone(),
+                                lat: x.lat.clone(),
+                                lng: x.lng.clone(),
+                            })
+                            .unwrap();
+                        }
+                        j += 1;
+                        if j >= citys_static.len() || j >= max_jj * (i + 1) {
+                            break;
+                        }
                     }
                 });
             }
@@ -139,6 +134,6 @@ impl Fd for Citys {
 pub fn filter_city(name: String) -> Vec<City> {
     const PATH: &str = "assets/citys.json";
     let fd = Citys::new(PATH);
-    //fd.filter(name)
-    fd.filter_multithread(name)
+    fd.filter(name)
+    //fd.filter_multithread(name)
 }
