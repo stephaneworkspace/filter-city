@@ -91,33 +91,39 @@ impl Fd for Citys {
         let mut citys: Vec<City> = vec![];
         if name.len() > 1 {
             let num_threads = 4;
-            let mut j: usize = 0;
             let (tx, rx) = channel();
             for i in 0..num_threads {
                 let tx = tx.clone();
                 let citys_static: Vec<City> = self.citys.clone();
                 let filter_upper_decode =
                     unidecode(&name.as_str()).to_ascii_uppercase();
+                let jj: usize = i * ((citys_static.len()) / num_threads);
+                let max_jj: usize =
+                    (i + 1) * (citys_static.len() / num_threads);
                 thread::spawn(move || loop {
-                    j = i * (citys_static.len() / num_threads);
-                    loop {
-                        let x = citys_static[j].clone();
-                        let compare_string =
-                            unidecode(x.name.as_str()).to_ascii_uppercase();
-                        if compare_string.contains(filter_upper_decode.as_str())
-                        {
-                            tx.send(City {
-                                country: x.country.clone(),
-                                name: x.name.clone(),
-                                lat: x.lat.clone(),
-                                lng: x.lng.clone(),
-                            })
-                            .unwrap();
-                        }
-                        j += 1;
-                        if j >= citys_static.len() {
-                            break;
-                        }
+                    let mut j: usize = jj;
+                    let x = citys_static[j].clone();
+                    let compare_string =
+                        unidecode(x.name.as_str()).to_ascii_uppercase();
+                    if compare_string.contains(filter_upper_decode.as_str()) {
+                        // print!(".");
+                        // io::stdout().flush().unwrap();
+                        /*println!(
+                            "name: {} {}",
+                            x.name.clone(),
+                            x.country.clone()
+                        );*/
+                        tx.send(City {
+                            country: x.country.clone(),
+                            name: x.name.clone(),
+                            lat: x.lat.clone(),
+                            lng: x.lng.clone(),
+                        })
+                        .unwrap();
+                    }
+                    j += 1;
+                    if j >= citys_static.len() || j >= max_jj {
+                        break;
                     }
                 });
             }
