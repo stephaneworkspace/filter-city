@@ -25,41 +25,64 @@ use std::fs::File;
 use std::io::Read;
 use unidecode::unidecode;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct City {
-    country: String,
-    name: String,
-    lat: String,
-    lng: String,
+    pub country: String,
+    pub name: String,
+    pub lat: String,
+    pub lng: String,
 }
 
-pub fn filter_city(filter: &str) -> Vec<City> {
-    let filter_upper_decode = unidecode(filter).to_ascii_uppercase();
-    let mut compare_string;
-    let mut s = String::new();
-    const PATH: &str = "assets/citys.json";
-    let mut file_path: std::path::PathBuf = std::path::PathBuf::new();
-    file_path.push(std::env::current_dir().unwrap().as_path());
-    file_path.push(PATH);
-    // println!("{:?}", file_path.as_path());
-    File::open(file_path.as_path())
-        .unwrap()
-        .read_to_string(&mut s)
-        .unwrap();
-    let _deserialized: Vec<City> = serde_json::from_str(&s).unwrap();
-    let mut city: Vec<City> = Vec::new();
-    for x in &_deserialized {
-        if filter.len() > 0 {
-            compare_string = unidecode(x.name.as_str()).to_ascii_uppercase();
-            if compare_string.contains(filter_upper_decode.as_str()) {
-                city.push(City {
-                    country: x.country.clone(),
-                    name: x.name.clone(),
-                    lat: x.lat.clone(),
-                    lng: x.lng.clone(),
-                });
-            }
+#[derive(Debug, Clone)]
+pub struct Citys {
+    pub citys: Vec<City>,
+}
+
+pub trait Fd {
+    fn filter(&self, name: String) -> Vec<City>;
+}
+
+impl Citys {
+    pub fn new(path: &str) -> Citys {
+        let mut s = String::new();
+        let mut file_path: std::path::PathBuf = std::path::PathBuf::new();
+        file_path.push(std::env::current_dir().unwrap().as_path());
+        file_path.push(path);
+        // println!("{:?}", file_path.as_path());
+        File::open(file_path.as_path())
+            .unwrap()
+            .read_to_string(&mut s)
+            .unwrap();
+        Citys {
+            citys: serde_json::from_str(&s).unwrap(),
         }
     }
-    city
+}
+
+impl Fd for Citys {
+    fn filter(&self, name: String) -> Vec<City> {
+        let filter_upper_decode = unidecode(name.as_str()).to_ascii_uppercase();
+        let mut city: Vec<City> = Vec::new();
+        for x in self.citys.clone() {
+            if name.len() > 0 {
+                let compare_string =
+                    unidecode(x.name.as_str()).to_ascii_uppercase();
+                if compare_string.contains(filter_upper_decode.as_str()) {
+                    city.push(City {
+                        country: x.country.clone(),
+                        name: x.name.clone(),
+                        lat: x.lat.clone(),
+                        lng: x.lng.clone(),
+                    });
+                }
+            }
+        }
+        city
+    }
+}
+
+pub fn filter_city(name: String) -> Vec<City> {
+    const PATH: &str = "assets/citys.json";
+    let fd = Citys::new(PATH);
+    fd.filter(name)
 }
