@@ -1,6 +1,6 @@
 [package]
 name = "filter-city"
-version = "0.1.6"
+version = "0.1.7"
 authors = ["Stéphane Bressani <s.bressani@bluewin.ch>"]
 keywords = ["city"]
 # crates.io/category_slugs

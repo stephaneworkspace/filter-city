@@ -25,10 +25,13 @@ use std::fs::File;
 use std::io::Read;
 use unidecode::unidecode;
 
-use std::io::{self, Write};
+//use std::io::{self, Write};
 use std::sync::mpsc::channel;
 use std::thread;
 
+const PATH: &str = "assets/citys.json";
+
+/// Format of json file in PATH
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct City {
     pub country: String,
@@ -37,16 +40,21 @@ pub struct City {
     pub lng: String,
 }
 
+/// Concat all City in one struct
 #[derive(Debug, Clone)]
 pub struct Citys {
     pub citys: Vec<City>,
 }
 
+/// Trait fd
 pub trait Fd {
-    fn filter(&self, name: String) -> Vec<City>;
-    fn filter_multithread(&self, name: String) -> Vec<City>;
+    /// Filter city monothread
+    fn filter(&self, name: &str) -> Vec<City>;
+    /// Filter city multithread
+    fn filter_multithread(&self, name: &str) -> Vec<City>;
 }
 
+/// Constructor for City impl
 impl Citys {
     pub fn new(path: &str) -> Citys {
         let mut s = String::new();
@@ -64,9 +72,11 @@ impl Citys {
     }
 }
 
+/// Impl of Fd for City
 impl Fd for Citys {
-    fn filter(&self, name: String) -> Vec<City> {
-        let filter_upper_decode = unidecode(name.as_str()).to_ascii_uppercase();
+    /// Filter city monothread
+    fn filter(&self, name: &str) -> Vec<City> {
+        let filter_upper_decode = unidecode(name).to_ascii_uppercase();
         let mut city: Vec<City> = Vec::new();
         for x in self.citys.clone() {
             if name.len() > 0 {
@@ -85,7 +95,8 @@ impl Fd for Citys {
         city
     }
 
-    fn filter_multithread(&self, name: String) -> Vec<City> {
+    /// Filter city multithread
+    fn filter_multithread(&self, name: &str) -> Vec<City> {
         let mut citys: Vec<City> = vec![];
         if name.len() > 1 {
             let num_threads = 4;
@@ -93,8 +104,7 @@ impl Fd for Citys {
             for i in 0..num_threads {
                 let tx = tx.clone();
                 let citys_static: Vec<City> = self.citys.clone();
-                let filter_upper_decode =
-                    unidecode(&name.as_str()).to_ascii_uppercase();
+                let filter_upper_decode = unidecode(&name).to_ascii_uppercase();
                 let max_jj: usize = citys_static.len() / num_threads;
                 let jj: usize = i * &max_jj;
                 thread::spawn(move || {
@@ -105,8 +115,10 @@ impl Fd for Citys {
                             unidecode(x.name.as_str()).to_ascii_uppercase();
                         if compare_string.contains(filter_upper_decode.as_str())
                         {
+                            /*
                             print!(".");
                             io::stdout().flush().unwrap();
+                            */
                             tx.send(City {
                                 country: x.country.clone(),
                                 name: x.name.clone(),
@@ -131,8 +143,7 @@ impl Fd for Citys {
     }
 }
 
-pub fn filter_city(name: String) -> Vec<City> {
-    const PATH: &str = "assets/citys.json";
+pub fn filter_city(name: &str) -> Vec<City> {
     let fd = Citys::new(PATH);
     fd.filter(name)
     //fd.filter_multithread(name)

@@ -29,6 +29,8 @@ extern crate filter_city;
 let search: Vec<filter_city::City> = filter_city::filter_city("Search...");
 ```
 ## Version
+* 0.1.7
+    Add code for multithreading
 * 0.1.6
     Optimization
 * 0.1.5

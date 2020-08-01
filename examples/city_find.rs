@@ -13,7 +13,7 @@ fn main() {
     }
     let name: String = args[1].clone();
 
-    let search: Vec<filter_city::City> = filter_city(name);
+    let search: Vec<filter_city::City> = filter_city(name.as_str());
     for s in search {
         println!("{:?}", s);
     }
