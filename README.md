@@ -19,6 +19,12 @@
 ## Introduction
 This program allows to search a city in ASCII all over the world in a json file.
 Initalliy I have done a script with Python but thas was very slow.
+
+THIS CODE IS VERY SLOW
+
+For better performance i recommand my code here : https://github.com/stephaneworkspace/city_time_zone_sqlite
+(not on crate)
+
 ## Prepare
 You have to download on my [github](https://github.com/stephaneworkspace/filter-city) the assets folder and put at the same level of ./src/main.rs and ./Cargo.toml the assets folder.
 * [x] ./assets/city.json
